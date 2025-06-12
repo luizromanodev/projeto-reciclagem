@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx", // Essa linha é vital
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true, // Boa opção para otimização de emitir JS
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true, // Boa opção para garantir que imports têm side effects seguros
+
+    /* Adições importantes para tipagem global e React.FC com verbatimModuleSyntax */
+    "typeRoots": ["./node_modules/@types", "./src/types"] // <<<< ADICIONE ESTA LINHA!
+  },
+  "include": ["src"]
+}

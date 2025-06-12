@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum para os diferentes papéis de usuário
+enum UserRole {
+  CITIZEN    // Cidadão comum que solicita coletas
+  COMPANY    // Empresa que solicita coletas
+  COOPERATIVE // Cooperativa de Reciclagem ou coletor
+}
+
+// Enum para os diferentes status de uma coleta
+enum CollectionStatus {
+  SCHEDULED   // Coleta agendada, aguardando atribuição
+  IN_ROUTE    // Coleta em rota, sendo realizada pela cooperativa
+  COMPLETED   // Coleta concluída
+  CANCELED    // Coleta cancelada
+}
+
+// Modelo de Usuário
+model User {
+  id        String     @id @default(uuid()) // ID único para o usuário (UUID)
+  name      String     // Nome do usuário/empresa/cooperativa
+  email     String     @unique // Email único para login
+  password  String     // Senha hasheada
+  phone     String?    // Telefone (opcional)
+  address   String?    // Endereço (opcional, para cidadão/empresa)
+  latitude  Float?     // Latitude (opcional, para cidadão/empresa/cooperativa para localização)
+  longitude Float?     // Longitude (opcional, para cidadão/empresa/cooperativa para localização)
+  role      UserRole   // Papel do usuário (CITIZEN, COMPANY, COOPERATIVE)
+  createdAt DateTime   @default(now()) // Data de criação do registro
+  updatedAt DateTime   @updatedAt // Data da última atualização do registro
+
+  // Relação: Coletas solicitadas por este usuário (se CITIZEN ou COMPANY)
+  collections          Collection[] @relation("Collector")
+  // Relação: Coletas realizadas por esta cooperativa (se COOPERATIVE)
+  collectedCollections Collection[] @relation("Cooperative")
+}
+
+// Modelo de Material Reciclável (Ex: Plástico, Papel, Metal)
+model Material {
+  id           String      @id @default(uuid()) // ID único para o material
+  name         String      @unique // Nome do material (deve ser único, ex: "Papel")
+  description  String?     // Descrição do material (opcional)
+
+  // Relação N-N com Collection através da tabela de junção MaterialOnCollection
+  collections  MaterialOnCollection[]
+}
+
+// Modelo de Coleta de Resíduos
+model Collection {
+  id           String             @id @default(uuid()) // ID único da coleta
+  requesterId  String             // ID do usuário que solicitou a coleta (CITIZEN ou COMPANY)
+  requester    User               @relation("Collector", fields: [requesterId], references: [id]) // Relação com o User que solicitou
+
+  cooperativeId String?            // ID da cooperativa responsável pela coleta (opcional, nulo se não atribuída)
+  cooperative  User?              @relation("Cooperative", fields: [cooperativeId], references: [id]) // Relação com o User (Cooperativa)
+
+  status       CollectionStatus   @default(SCHEDULED) // <<< CORRIGIDO AQUI: agora está SCHEDULED
+  pickupDate   DateTime           // Data e hora agendada para a coleta
+  notes        String?            // Observações adicionais sobre a coleta
+
+  latitude     Float              // Latitude do local da coleta
+  longitude    Float              // Longitude do local da coleta
+  weightKg     Float?             // Peso total em KG dos materiais coletados (registrado pela cooperativa)
+
+  createdAt    DateTime           @default(now()) // Data de criação da solicitação
+  updatedAt    DateTime           @updatedAt // Data da última atualização da coleta
+
+  // Relação N-N com Material através da tabela de junção MaterialOnCollection
+  materials    MaterialOnCollection[]
+}
+
+// Tabela de Junção para a relação N-N entre Collection e Material
+model MaterialOnCollection {
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+  material     Material   @relation(fields: [materialId], references: [id])
+  materialId   String
+  quantity     String?    // Ex: "2 sacolas", "1 caixa grande" - para descrever a quantidade do material
+
+  @@id([collectionId, materialId]) // Define uma chave primária composta
+}
