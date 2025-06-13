@@ -1,13 +1,10 @@
-// frontend/src/pages/Dashboard.tsx
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { isApiError } from "../utils/typeGuards";
 import Unauthorized from "./Unauthorized";
-import type { Collection } from "../types/global"; // Importar Collection do global.d.ts
-
-// A interface Collection já está importada do global.d.ts
+import type { Collection } from "../types/global";
 
 const Dashboard: React.FC = () => {
   const { user, signOut } = useAuth();
@@ -26,7 +23,7 @@ const Dashboard: React.FC = () => {
       }
       try {
         setLoadingCollections(true);
-        const response = await api.get<Collection[]>("/collections"); // CORRIGIDO: Removido '/api'
+        const response = await api.get<Collection[]>("/collections");
 
         setCollections(response.data);
       } catch (err: unknown) {
@@ -62,7 +59,6 @@ const Dashboard: React.FC = () => {
     }
     try {
       const currentCollection = collections.find((c) => c.id === collectionId);
-      // <<< CORREÇÃO AQUI: 'const' e tipagem direta. Adicionamos propriedades condicionalmente.
       const payload: UpdateStatusPayload = { status: newStatus };
 
       if (newStatus === "IN_ROUTE" && !currentCollection?.cooperativeId) {
@@ -89,7 +85,7 @@ const Dashboard: React.FC = () => {
       }
 
       const response = await api.put<Collection>(
-        `/collections/${collectionId}/status`, // CORRIGIDO: Removido '/api'
+        `/collections/${collectionId}/status`,
         payload
       );
       alert(

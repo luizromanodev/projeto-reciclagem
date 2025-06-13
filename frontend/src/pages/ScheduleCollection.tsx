@@ -1,4 +1,3 @@
-// frontend/src/pages/ScheduleCollection.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -26,9 +25,7 @@ const ScheduleCollection: React.FC = () => {
     const loadMaterials = async () => {
       try {
         setLoadingMaterials(true);
-        // Assumindo que você tem uma rota GET /materials agora
         const response = await api.get<Material[]>("/materials", {
-          // CORRIGIDO: Removido '/api'
           headers: {
             Authorization: `Bearer ${
               localStorage.getItem("cooperativeToken") || ""
@@ -45,7 +42,6 @@ const ScheduleCollection: React.FC = () => {
           setError("Ocorreu um erro desconhecido ao carregar materiais.");
         }
         console.error("Erro ao carregar materiais:", err);
-        // Fallback para demo se API falhar ou rota não existir
         setMaterials([
           { id: "mat-plastico-demo-id", name: "Plástico" },
           { id: "mat-papel-demo-id", name: "Papel" },

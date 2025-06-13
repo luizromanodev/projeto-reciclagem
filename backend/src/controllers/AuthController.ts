@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import AuthService from "../services/AuthService";
 import { UserRole } from "@prisma/client";
-import { z } from "zod"; // Para validação de dados
+import { z } from "zod";
 
 class AuthController {
-  // Mova os schemas para dentro da classe como propriedades estáticas
   private static registerSchema = z
     .object({
       name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
@@ -25,10 +24,8 @@ class AuthController {
     })
     .strict("Campos adicionais não são permitidos no login.");
 
-  // Mude para arrow function (como já fizemos)
   register = async (req: Request, res: Response) => {
     try {
-      // Acesse o schema usando AuthController.registerSchema
       const validatedData = AuthController.registerSchema.parse(req.body);
       const {
         name,
@@ -62,10 +59,8 @@ class AuthController {
     }
   };
 
-  // Mude para arrow function (como já fizemos)
   login = async (req: Request, res: Response) => {
     try {
-      // Acesse o schema usando AuthController.loginSchema
       const validatedData = AuthController.loginSchema.parse(req.body);
       const { email, password } = validatedData;
 
@@ -82,4 +77,4 @@ class AuthController {
   };
 }
 
-export default new AuthController(); // Continua exportando uma instância
+export default new AuthController();

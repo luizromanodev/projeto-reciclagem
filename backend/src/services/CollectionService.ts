@@ -1,4 +1,3 @@
-// backend/src/services/CollectionService.ts
 import prisma from "../utils/prisma";
 import { CollectionStatus } from "@prisma/client";
 
@@ -59,7 +58,7 @@ class CollectionService {
     cooperativeId?: string;
     isRequester?: boolean;
   }) {
-    const whereClause: any = {}; // Considerar refatorar para um tipo mais específico que 'any'
+    const whereClause: any = {};
     if (filter.status) {
       whereClause.status = filter.status;
     }
@@ -181,7 +180,6 @@ class CollectionService {
     return updatedCollection;
   }
 
-  // >>> NOVO MÉTODO ADICIONADO AQUI: Listar Materiais <<<
   async listMaterials() {
     const materials = await prisma.material.findMany({
       orderBy: { name: "asc" }, // Ordena por nome

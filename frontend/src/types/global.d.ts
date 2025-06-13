@@ -1,14 +1,9 @@
-// frontend/src/types/global.d.ts
-// Este arquivo será lido automaticamente pelo TypeScript para tipagens globais
-
-// Interface para a estrutura de erro esperada do backend
 export interface ApiErrorResponse {
   message: string;
   errors?: string[]; // Se o seu backend retorna um array de mensagens de erro
   statusCode?: number; // Exemplo: se o backend retorna um statusCode no corpo
 }
 
-// Definição de tipos para o usuário
 export interface User {
   id: string;
   name: string;
@@ -21,7 +16,6 @@ export interface User {
   points?: number; // Para futura gamificação
 }
 
-// <<< INTERFACES MATERIAL E COLLECTION ADICIONADAS AQUI! >>>
 // Interface para Material reciclável
 export interface Material {
   id: string;
@@ -44,7 +38,7 @@ export interface Collection {
   status: "SCHEDULED" | "IN_ROUTE" | "COMPLETED" | "CANCELED";
   latitude: number;
   longitude: number;
-  weightKg?: number; // Peso total em KG (opcional, registrado após a conclusão)
+  weightKg?: number; // Peso total em KG
   notes?: string;
   cooperativeId?: string | null; // ID da cooperativa atribuída (pode ser null)
   cooperative?: { name: string; email: string; id: string } | null; // Detalhes da cooperativa atribuída

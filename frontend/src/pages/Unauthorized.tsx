@@ -1,5 +1,4 @@
-// frontend/src/pages/Unauthorized.tsx
-import React from "react"; // Adicione React para JSX
+import React from "react";
 import { Link } from "react-router-dom";
 
 const Unauthorized: React.FC = () => {

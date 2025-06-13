@@ -3,7 +3,6 @@ import UserService from "../services/UserService";
 import { z } from "zod";
 
 class UserController {
-  // Mova o schema para dentro da classe como propriedade estática
   private static updateUserSchema = z
     .object({
       name: z.string().min(3).optional(),
@@ -37,7 +36,6 @@ class UserController {
           .status(401)
           .json({ message: "ID do usuário não encontrado na requisição." });
       }
-      // Acesse o schema usando UserController.updateUserSchema
       const validatedData = UserController.updateUserSchema.parse(req.body);
       const updatedUser = await UserService.updateUser(
         req.userId,

@@ -1,4 +1,3 @@
-// backend/src/controllers/MaterialController.ts
 import { Request, Response } from "express";
 import CollectionService from "../services/CollectionService";
 

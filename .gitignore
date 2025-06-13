@@ -1,0 +1,44 @@
+# .gitignore
+
+# Diretórios de dependências
+**/node_modules/
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.*.local
+
+# Diretórios de build/compilação
+**/dist/
+**/build/
+**/out/
+
+# Caches do npm
+npm-debug.log*
+.npm/
+
+# Caches do Yarn
+yarn-debug.log*
+.yarn/
+.yarn-cache/
+
+# Caches do Vite
+.vite/
+
+# Arquivos temporários
+*.tmp
+*.log
+
+# Caches de IDEs (ex: VS Code)
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# Arquivos gerados pelo sistema operacional
+.DS_Store
+Thumbs.db
+
+# Diretórios específicos do Prisma
+**/prisma/migrations/ # Mantenha suas migrations se quiser versionar o histórico delas
+**/prisma/generated/ # Geralmente é ignorado, pois é gerado pelo cliente Prisma

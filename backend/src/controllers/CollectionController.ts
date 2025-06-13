@@ -4,7 +4,6 @@ import { CollectionStatus } from "@prisma/client";
 import { z } from "zod";
 
 class CollectionController {
-  // Mova os schemas para dentro da classe como propriedades estáticas
   private static scheduleCollectionSchema = z
     .object({
       latitude: z.number().min(-90).max(90, "Latitude inválida."),
@@ -12,7 +11,7 @@ class CollectionController {
       pickupDate: z
         .string()
         .datetime("Formato de data e hora inválido (ISO 8601 esperado).")
-        .transform((str) => new Date(str)), // Transforma string em Date
+        .transform((str) => new Date(str)),
       materials: z
         .array(
           z
@@ -41,7 +40,6 @@ class CollectionController {
     .strict("Campos adicionais não são permitidos na atualização de status.");
 
   scheduleCollection = async (req: Request, res: Response) => {
-    // Mude para arrow function
     try {
       // O ID do usuário solicitante vem do middleware de autenticação
       const requesterId = req.userId;
@@ -49,7 +47,6 @@ class CollectionController {
         return res.status(401).json({ message: "Usuário não autenticado." });
       }
 
-      // Acesse o schema usando CollectionController.scheduleCollectionSchema
       const validatedData = CollectionController.scheduleCollectionSchema.parse(
         req.body
       );
@@ -76,7 +73,6 @@ class CollectionController {
   };
 
   listCollections = async (req: Request, res: Response) => {
-    // Mude para arrow function
     try {
       const { status, requesterId, cooperativeId } = req.query;
 
@@ -113,12 +109,9 @@ class CollectionController {
   };
 
   getCollectionById = async (req: Request, res: Response) => {
-    // Mude para arrow function
     try {
       const { id } = req.params;
       const collection = await CollectionService.getCollectionById(id);
-      // Opcional: Adicionar lógica para garantir que o usuário só veja suas próprias coletas
-      // ou coletas que ele está autorizado a ver (se for cooperativa atribuída)
       if (req.userRole === "CITIZEN" || req.userRole === "COMPANY") {
         if (collection.requesterId !== req.userId) {
           return res
@@ -143,10 +136,8 @@ class CollectionController {
   };
 
   updateCollectionStatus = async (req: Request, res: Response) => {
-    // Mude para arrow function
     try {
       const { id } = req.params;
-      // Acesse o schema usando CollectionController.updateCollectionStatusSchema
       const validatedData =
         CollectionController.updateCollectionStatusSchema.parse(req.body);
       const { status, cooperativeId, weightKg } = validatedData;
@@ -184,7 +175,6 @@ class CollectionController {
   };
 
   seedMaterials = async (req: Request, res: Response) => {
-    // Mude para arrow function
     try {
       await CollectionService.seedMaterials();
       return res

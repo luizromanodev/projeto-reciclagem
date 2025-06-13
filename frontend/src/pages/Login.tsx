@@ -1,4 +1,3 @@
-// frontend/src/pages/Login.tsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -16,7 +15,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await api.post("/auth/login", { email, password }); // CORRIGIDO: Removido '/api'
+      const response = await api.post("/auth/login", { email, password });
       const { token, user } = response.data;
       signIn(token, user);
       alert(`Login de ${user.name} realizado com sucesso!`);

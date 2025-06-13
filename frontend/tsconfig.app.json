@@ -13,18 +13,17 @@
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "jsx": "react-jsx", // Essa linha é vital
+    "jsx": "react-jsx",
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true, // Boa opção para otimização de emitir JS
+    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true, // Boa opção para garantir que imports têm side effects seguros
+    "noUncheckedSideEffectImports": true,
 
-    /* Adições importantes para tipagem global e React.FC com verbatimModuleSyntax */
-    "typeRoots": ["./node_modules/@types", "./src/types"] // <<<< ADICIONE ESTA LINHA!
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": ["src"]
 }

@@ -1,5 +1,4 @@
-// frontend/src/services/api.ts
-import axios, { AxiosError } from "axios"; // Importe AxiosError
+import axios, { AxiosError } from "axios";
 import type { ApiErrorResponse } from "../types/global";
 
 const api = axios.create({
@@ -14,7 +13,6 @@ api.interceptors.request.use(
     }
     return config;
   },
-  // O erro na requisição já é tipado como AxiosError
   (error: AxiosError) => {
     return Promise.reject(error);
   }
@@ -22,15 +20,7 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  // NO INTERCEPTOR DE RESPOSTA, TIPAMOS O ERRO COMO AxiosError<ApiErrorResponse>
-  // Isso informa ao TypeScript a estrutura esperada da resposta de erro da API.
   (error: AxiosError<ApiErrorResponse>) => {
-    // <<<<< Mudei o tipo de 'error' AQUI!
-    // Agora, TypeScript já sabe que 'error' tem 'response' e 'data' (do tipo ApiErrorResponse)
-    // Se response ou data forem undefined (o que o AxiosError<ApiErrorResponse> ainda permite),
-    // é porque a resposta não teve a estrutura esperada (ex: erro de rede).
-    // Usamos um condicional opcional (?) ou garantimos com 'if'.
-
     if (error.response) {
       // Verifica se a propriedade 'response' existe
       const { status, data } = error.response; // Desestrutura status e data

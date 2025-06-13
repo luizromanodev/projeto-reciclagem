@@ -1,6 +1,6 @@
 import prisma from "../utils/prisma";
 import { hashPassword, comparePassword, generateToken } from "../utils/auth";
-import { UserRole } from "@prisma/client"; // Importa o enum de roles do Prisma
+import { UserRole } from "@prisma/client";
 
 class AuthService {
   async register(

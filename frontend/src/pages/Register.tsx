@@ -1,4 +1,3 @@
-// frontend/src/pages/Register.tsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -21,7 +20,6 @@ const Register: React.FC = () => {
     setError(null);
     try {
       const response = await api.post("/auth/register", {
-        // CORRIGIDO: Removido '/api'
         name,
         email,
         password,

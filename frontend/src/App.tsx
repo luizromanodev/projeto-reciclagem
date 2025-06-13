@@ -1,6 +1,5 @@
-// frontend/src/App.tsx
-import React from "react"; // Importar React para uso de JSX e React.FC
-import { Routes, Route, Navigate, Link } from "react-router-dom"; // Importe Link
+import React from "react";
+import { Routes, Route, Navigate, Link } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -9,15 +8,11 @@ import Home from "./pages/Home";
 import ScheduleCollection from "./pages/ScheduleCollection";
 import Dashboard from "./pages/Dashboard";
 
-// Páginas
-
-// Layout simples para páginas públicas
 const PublicLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   return (
     <>
-      {/* Exemplo de Navbar simples do Bootstrap */}
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
         <div className="container-fluid">
           <Link className="navbar-brand text-success fw-bold" to="/">

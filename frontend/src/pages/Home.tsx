@@ -1,4 +1,3 @@
-// frontend/src/pages/Home.tsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -6,7 +5,6 @@ import api from "../services/api";
 import { isApiError } from "../utils/typeGuards";
 import type { Collection, User } from "../types/global";
 
-// TIPAGENS ESPECÍFICAS DESTA PÁGINA
 interface Stats {
   activeUsers: number;
   wasteRecycled: number;
@@ -76,8 +74,6 @@ const Home: React.FC = () => {
         });
       } catch (err: unknown) {
         if (isApiError(err)) {
-          // Exibir erro apenas se não for um 403 (que já tratamos no início do if)
-          // Mas se for 403, já foi tratado pelo if acima
           setError(
             err.response?.data?.message || "Erro ao carregar estatísticas."
           );
