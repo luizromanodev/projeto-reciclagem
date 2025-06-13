@@ -1,4 +1,3 @@
-// backend/src/controllers/CollectionController.ts
 import { Request, Response } from "express";
 import CollectionService from "../services/CollectionService";
 import { CollectionStatus } from "@prisma/client";
@@ -156,20 +155,15 @@ class CollectionController {
       // Apenas a cooperativa logada (req.userId) pode atribuir/atualizar status de uma coleta para si mesma
       // ou admins (se houvesse um papel admin).
       if (cooperativeId && req.userId !== cooperativeId) {
-        return res
-          .status(403)
-          .json({
-            message:
-              "Você não tem permissão para atribuir esta coleta a outra cooperativa.",
-          });
+        return res.status(403).json({
+          message:
+            "Você não tem permissão para atribuir esta coleta a outra cooperativa.",
+        });
       }
       if (req.userRole !== "COOPERATIVE") {
-        return res
-          .status(403)
-          .json({
-            message:
-              "Apenas cooperativas podem atualizar o status das coletas.",
-          });
+        return res.status(403).json({
+          message: "Apenas cooperativas podem atualizar o status das coletas.",
+        });
       }
 
       const updatedCollection = await CollectionService.updateCollectionStatus(
@@ -197,12 +191,10 @@ class CollectionController {
         .status(200)
         .json({ message: "Materiais pré-populados com sucesso!" });
     } catch (error: any) {
-      return res
-        .status(500)
-        .json({
-          message: "Erro ao pré-popular materiais.",
-          error: error.message,
-        });
+      return res.status(500).json({
+        message: "Erro ao pré-popular materiais.",
+        error: error.message,
+      });
     }
   };
 }

@@ -10,13 +10,13 @@ class AuthController {
       name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
       email: z.string().email("Formato de email inválido."),
       password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
-      role: z.nativeEnum(UserRole, { message: "Papel de usuário inválido." }), // Garante que o papel seja um dos enums definidos
+      role: z.nativeEnum(UserRole, { message: "Papel de usuário inválido." }),
       phone: z.string().optional(),
       address: z.string().optional(),
       latitude: z.number().optional(),
       longitude: z.number().optional(),
     })
-    .strict("Campos adicionais não são permitidos no registro."); // Impede campos extras no payload
+    .strict("Campos adicionais não são permitidos no registro.");
 
   private static loginSchema = z
     .object({
@@ -25,7 +25,7 @@ class AuthController {
     })
     .strict("Campos adicionais não são permitidos no login.");
 
-  // Mude para arrow function
+  // Mude para arrow function (como já fizemos)
   register = async (req: Request, res: Response) => {
     try {
       // Acesse o schema usando AuthController.registerSchema
@@ -54,17 +54,15 @@ class AuthController {
       return res.status(201).json({ user, token });
     } catch (error: any) {
       if (error instanceof z.ZodError) {
-        // Erros de validação do Zod
         return res
           .status(400)
           .json({ message: "Erro de validação.", errors: error.errors });
       }
-      // Outros erros do AuthService
       return res.status(400).json({ message: error.message });
     }
   };
 
-  // Mude para arrow function
+  // Mude para arrow function (como já fizemos)
   login = async (req: Request, res: Response) => {
     try {
       // Acesse o schema usando AuthController.loginSchema
@@ -75,12 +73,10 @@ class AuthController {
       return res.status(200).json({ user, token });
     } catch (error: any) {
       if (error instanceof z.ZodError) {
-        // Erros de validação do Zod
         return res
           .status(400)
           .json({ message: "Erro de validação.", errors: error.errors });
       }
-      // Outros erros do AuthService
       return res.status(401).json({ message: error.message });
     }
   };
