@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import api from "../services/api";
 import { isApiError } from "../utils/typeGuards";
-import type { User, Collection } from "../types/global";
-// <<< CORREÇÃO AQUI: Importar User, Material e Collection do global.d.ts
+import type { Collection, User } from "../types/global";
 
 // TIPAGENS ESPECÍFICAS DESTA PÁGINA
 interface Stats {
@@ -13,9 +12,6 @@ interface Stats {
   wasteRecycled: number;
   partnerCooperatives: number;
 }
-
-// A interface Collection não precisa ser redeclarada aqui, pois está em global.d.ts
-// interface Collection { ... }
 
 const Home: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -28,10 +24,21 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const loadStats = async () => {
+      // Se o usuário logado NÃO for uma COOPERATIVA, não tentamos buscar estatísticas globais
+      // que exigem essa permissão. As estatísticas permanecerão em 0.
+      if (!user || user.role !== "COOPERATIVE") {
+        console.log(
+          "Usuário não é COOPERATIVA. Não buscará estatísticas globais que exigem permissão."
+        );
+        setStats({ activeUsers: 0, wasteRecycled: 0, partnerCooperatives: 0 }); // Reseta ou mantém 0
+        setError(null); // Limpa qualquer erro anterior de Acesso Negado
+        return;
+      }
+
       try {
         setError(null);
         // Exemplo: Buscar número de usuários e cooperativas
-        const usersResponse = await api.get<User[]>("/api/users", {
+        const usersResponse = await api.get<User[]>("/users", {
           headers: {
             Authorization: `Bearer ${
               localStorage.getItem("cooperativeToken") || ""
@@ -41,9 +48,8 @@ const Home: React.FC = () => {
         const allUsers = usersResponse.data;
 
         // Exemplo: Buscar total de resíduos reciclados (filtrando por status COMPLETED)
-        // <<< Usando Collection[] para tipar a resposta da API aqui
         const collectionsResponse = await api.get<Collection[]>(
-          "/api/collections",
+          "/collections",
           {
             headers: {
               Authorization: `Bearer ${
@@ -70,6 +76,8 @@ const Home: React.FC = () => {
         });
       } catch (err: unknown) {
         if (isApiError(err)) {
+          // Exibir erro apenas se não for um 403 (que já tratamos no início do if)
+          // Mas se for 403, já foi tratado pelo if acima
           setError(
             err.response?.data?.message || "Erro ao carregar estatísticas."
           );
@@ -80,8 +88,11 @@ const Home: React.FC = () => {
       }
     };
 
+    // Só tenta carregar as estatísticas se houver um usuário logado no contexto
+    // e o papel for COOPERATIVA, conforme a lógica dentro de loadStats.
+    // Se não houver user, as estatísticas já estarão em 0.
     loadStats();
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user]); // Depende de isAuthenticated e user para re-executar
 
   return (
     <div className="container mt-5 pt-5">
@@ -114,6 +125,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Exibir erro apenas se ele existir e for diferente do 403 de acesso negado */}
       {error && <div className="alert alert-danger text-center">{error}</div>}
 
       <section className="row text-center my-5">

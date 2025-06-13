@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { isApiError } from "../utils/typeGuards";
 import Unauthorized from "./Unauthorized";
-import type { Collection } from "../types/global";
+import type { Collection } from "../types/global"; // Importar Collection do global.d.ts
 
 // A interface Collection já está importada do global.d.ts
 
@@ -26,14 +26,9 @@ const Dashboard: React.FC = () => {
       }
       try {
         setLoadingCollections(true);
-        const response = await api.get<Collection[]>("/api/collections");
+        const response = await api.get<Collection[]>("/collections"); // CORRIGIDO: Removido '/api'
 
-        const filteredCollections = response.data.filter(
-          (col) =>
-            (col.status === "SCHEDULED" && !col.cooperativeId) ||
-            (col.cooperativeId === user.id && col.status !== "CANCELED")
-        );
-        setCollections(filteredCollections);
+        setCollections(response.data);
       } catch (err: unknown) {
         if (isApiError(err)) {
           setError(err.response?.data?.message || "Erro ao carregar coletas.");
@@ -62,27 +57,28 @@ const Dashboard: React.FC = () => {
     newStatus: "IN_ROUTE" | "COMPLETED" | "CANCELED"
   ) => {
     if (!user || user.role !== "COOPERATIVE") {
-      // Este alerta já deveria ser pego pelo PrivateRoute, mas é um fallback.
       alert("Você não tem permissão para atualizar coletas.");
       return;
     }
     try {
       const currentCollection = collections.find((c) => c.id === collectionId);
-      // <<< CORREÇÃO AQUI: Tipagem do payload e construção mais direta
+      // <<< CORREÇÃO AQUI: 'const' e tipagem direta. Adicionamos propriedades condicionalmente.
       const payload: UpdateStatusPayload = { status: newStatus };
 
       if (newStatus === "IN_ROUTE" && !currentCollection?.cooperativeId) {
         payload.cooperativeId = user.id; // Atribui a cooperativa logada
       }
       if (newStatus === "COMPLETED") {
-        const weight = prompt("Informe o peso total em KG (número decimal):");
+        const weightInput = prompt(
+          "Informe o peso total em KG (número decimal):"
+        );
         if (
-          weight !== null &&
-          !isNaN(Number(weight)) &&
-          parseFloat(weight) >= 0
+          weightInput !== null &&
+          !isNaN(Number(weightInput)) &&
+          parseFloat(weightInput) >= 0
         ) {
-          payload.weightKg = parseFloat(weight);
-        } else if (weight !== null) {
+          payload.weightKg = parseFloat(weightInput);
+        } else if (weightInput !== null) {
           // Usuário inseriu algo, mas é inválido
           alert("Peso inválido. A coleta não será concluída.");
           return;
@@ -93,7 +89,7 @@ const Dashboard: React.FC = () => {
       }
 
       const response = await api.put<Collection>(
-        `/api/collections/${collectionId}/status`,
+        `/collections/${collectionId}/status`, // CORRIGIDO: Removido '/api'
         payload
       );
       alert(

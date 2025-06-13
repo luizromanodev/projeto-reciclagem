@@ -1,21 +1,15 @@
+// frontend/src/pages/ScheduleCollection.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { isApiError } from "../utils/typeGuards";
-
-// TIPAGENS ESPECÍFICAS DESTA PÁGINA
-// AGORA UTILIZADA!
-interface Material {
-  id: string;
-  name: string;
-}
+import type { Material } from "../types/global";
 
 const ScheduleCollection: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  // Use a interface Material para tipar o estado 'materials'
-  const [materials, setMaterials] = useState<Material[]>([]); // <<< CORREÇÃO AQUI: Tipagem do estado
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [selectedMaterialId, setSelectedMaterialId] = useState("");
   const [collectionQuantityNotes, setCollectionQuantityNotes] = useState("");
   const [pickupDate, setPickupDate] = useState("");
@@ -32,10 +26,9 @@ const ScheduleCollection: React.FC = () => {
     const loadMaterials = async () => {
       try {
         setLoadingMaterials(true);
-        // Assumindo que você tem uma rota GET /api/materials agora
-        // Esta rota pode precisar de um token de cooperativa no backend, ou ser pública
-        const response = await api.get<Material[]>("/api/materials", {
-          // <<< CORREÇÃO AQUI: Tipagem da resposta da API
+        // Assumindo que você tem uma rota GET /materials agora
+        const response = await api.get<Material[]>("/materials", {
+          // CORRIGIDO: Removido '/api'
           headers: {
             Authorization: `Bearer ${
               localStorage.getItem("cooperativeToken") || ""
@@ -95,7 +88,8 @@ const ScheduleCollection: React.FC = () => {
       const collectionLongitude =
         user.longitude || MARINGA_LONGITUDE + (Math.random() * 0.01 - 0.005);
 
-      await api.post("/api/collections", {
+      await api.post("/collections", {
+        // CORRIGIDO: Removido '/api'
         latitude: collectionLatitude,
         longitude: collectionLongitude,
         pickupDate: new Date(pickupDate).toISOString(), // Converte para formato ISO

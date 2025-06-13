@@ -20,7 +20,8 @@ const Register: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await api.post("/api/auth/register", {
+      const response = await api.post("/auth/register", {
+        // CORRIGIDO: Removido '/api'
         name,
         email,
         password,

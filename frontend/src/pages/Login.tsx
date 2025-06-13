@@ -16,7 +16,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await api.post("/api/auth/login", { email, password });
+      const response = await api.post("/auth/login", { email, password }); // CORRIGIDO: Removido '/api'
       const { token, user } = response.data;
       signIn(token, user);
       alert(`Login de ${user.name} realizado com sucesso!`);
