@@ -55,11 +55,11 @@ O projeto é construído como uma aplicação Full Stack, utilizando tecnologias
 
 O projeto é organizado como um **monorepo leve**, com dois diretórios principais na raiz: `backend` e `frontend`.
 
-/projeto-reciclagem/
-├── backend/ # Código-fonte e configurações do servidor
-├── frontend/ # Código-fonte e configurações da interface do usuário
-├── .gitignore # Regras para ignorar arquivos no controle de versão
-└── README.md # Este arquivo de documentação
+```/projeto-reciclagem/```
+```├── backend/ # Código-fonte e configurações do servidor```
+```├── frontend/ # Código-fonte e configurações da interface do usuário```
+```├── .gitignore # Regras para ignorar arquivos no controle de versão```
+```└── README.md # Este arquivo de documentação```
 
 ## Como Configurar e Rodar o Projeto
 
